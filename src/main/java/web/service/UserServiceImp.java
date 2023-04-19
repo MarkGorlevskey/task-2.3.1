@@ -1,45 +1,44 @@
 package web.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import web.Dao.UserDao;
 import web.model.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
+
 
 @Service
 public class UserServiceImp implements UserService {
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final UserDao userDao;
 
+    public UserServiceImp(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Transactional
     @Override
-    public void saveUser(String name, String lastName, Byte age, String phoneNumber, String email) {
-        entityManager.persist(new User(name, lastName, age, phoneNumber, email));
+    public void save(User user) {
+        userDao.save(user);
     }
 
     @Override
-    public User selectUserFromId(int id) {
-        return entityManager.find(User.class, id);
+    public User findById(Long id) {
+        return userDao.findById(id);
     }
 
     @Override
-    public List<User> getAllUser() {
-        return entityManager.createQuery("SELECT User FROM User", User.class).getResultList();
+    public List<User> findAll() {
+        return userDao.findAll();
     }
-
+    @Transactional
     @Override
-    public void changeUserInfoById(int id, User user) {
-        User user1 = entityManager.find(User.class, id);
-        user1.setName(user.getName());
-        user1.setLastName(user.getLastName());
-        user1.setAge(user.getAge());
-        user1.setPhoneNumber(user.getPhoneNumber());
-        user1.setEmail(user.getEmail());
-        entityManager.merge(user1);
+    public void update(Long id, User user) {
+        userDao.update(id, user);
     }
-
+    @Transactional
     @Override
-    public void removeUser(User user) {
-        entityManager.remove(user);
+    public void delete(User user) {
+        userDao.delete(user);
     }
 }

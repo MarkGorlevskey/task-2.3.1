@@ -3,95 +3,75 @@ package web.model;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column
+    private Long id;
     private String name;
-
-    @Column
-    private String lastName;
-
-    @Column
-    private byte age;
-
-    @Column
-    private String phoneNumber;
-
-    @Column
+    private String last_name;
     private String email;
+    private Integer age;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String name, String lastName, byte age, String phoneNumber, String email) {
+
+    public User(String name, String last_name, String email, Integer age) {
         this.name = name;
-        this.lastName = lastName;
-        this.age = age;
-        this.phoneNumber = phoneNumber;
+        this.last_name = last_name;
         this.email = email;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setAge(byte age) {
         this.age = age;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Byte getAge() {
-        return age;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id= " + id +
-                ", name=' " + name + '\'' +
-                ", lastName=' " + lastName + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email='" + email + '\'' +
                 ", age=" + age +
-                ", phoneNumber=' " + phoneNumber + '\'' +
-                ", email=' " + email + '\'' +
                 '}';
     }
 }

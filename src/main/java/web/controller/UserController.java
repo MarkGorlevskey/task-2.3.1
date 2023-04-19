@@ -10,41 +10,66 @@ import java.util.List;
 
 @Controller
 public class UserController {
-    private UserService userService;
+
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+
     @GetMapping("/")
-    public String getAllUser(Model model) {
-        List<User> list = userService.getAllUser();
-        model.addAttribute("userList", list);
-        return "userList";
+    public String getAllUsers(Model model) {
+        List<User> userList = userService.findAll();
+        model.addAttribute("userList", userList);
+        return "index";
     }
 
-    @GetMapping("/selectUserFromId/{id}")
-    public String selectUserFromId(@PathVariable int id, Model model) {
-        User user = userService.selectUserFromId(id);
+    @GetMapping("/search")
+    public String getUserById(@RequestParam(required = false) Long id, Model model) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return "redirect:/";
+        }
         model.addAttribute("user", user);
         return "search";
     }
 
-    @PutMapping("/save")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user.getName(), user.getLastName(), user.getAge(), user.getPhoneNumber(), user.getEmail());
-        return "saveUser";
+    @GetMapping("/new")
+    public String showCreateUserForm(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        return "new_user";
     }
 
-    @DeleteMapping("/removeUser/{id}")
-    public String removeUser(@ModelAttribute("user") User user) {
-        userService.removeUser(user);
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute("user") User user) {
+        userService.save(user);
         return "redirect:/";
     }
 
-    @PatchMapping("/updateUser/{id}")
-    public String changeUserById(@PathVariable int id, @ModelAttribute User user) {
-        userService.changeUserInfoById(id, user);
+    @GetMapping("/edit/{id}")
+    public String showEditUserForm(@PathVariable Long id, Model model) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "edit_user";
+    }
+
+    @PatchMapping("/edit/{id}")
+    public String updateUserSubmit(@PathVariable Long id, @ModelAttribute User user) {
+        userService.update(id, user);
+        return "redirect:/";
+    }
+
+
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteUserSubmit(@PathVariable Long id) {
+        User byId = userService.findById(id);
+        userService.delete(byId);
         return "redirect:/";
     }
 }
